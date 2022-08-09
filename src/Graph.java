@@ -46,7 +46,7 @@ public class Graph {
         this.countEdges++;
     }
 
-    public void degree(int node){
+    public int degree(int node){
         if(node < 0 || node > (this.countNodes - 1) )
             System.err.println("Invalid node: " + node);
         int count = 0;
@@ -54,7 +54,7 @@ public class Graph {
             if(this.adjMatrix[node][i] != 0)
                 ++count;
         }
-        System.out.println("Degree (" + node + ") = " + count);
-//        return count;
+//        System.out.println("Degree (" + node + ") = " + count);
+        return count;
     }
 }
