@@ -76,7 +76,7 @@ public class Graph {
     }
 
     public Graph complement(){
-        var g2 = new Graph(4);
+        var g2 = new Graph(this.countNodes);
 
         for (int i = 0; i < this.adjMatrix.length; i++) {
             for (int j = 0; j < this.adjMatrix[i].length; j++) {
