@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Graph {
     private int countNodes;
     private int countEdges;
@@ -54,7 +52,38 @@ public class Graph {
             if(this.adjMatrix[node][i] != 0)
                 ++count;
         }
-//        System.out.println("Degree (" + node + ") = " + count);
         return count;
+    }
+
+    public int highestDegree(){
+        int highest = 0;
+        for (int i = 0; i < this.adjMatrix.length; i++) {
+            int degreeNodeI = this.degree(i);
+            if(degreeNodeI > highest)
+                highest = degreeNodeI;
+        }
+        return highest;
+    }
+
+    public int lowestDegree(){
+        int lowest = this.adjMatrix.length;
+        for (int i = 1; i < this.adjMatrix.length; i++) {
+            int degreeNodeI = this.degree(i);
+            if(degreeNodeI < lowest)
+                lowest = degreeNodeI;
+        }
+        return lowest;
+    }
+
+    public Graph complement(){
+        var g2 = new Graph(4);
+
+        for (int i = 0; i < this.adjMatrix.length; i++) {
+            for (int j = 0; j < this.adjMatrix[i].length; j++) {
+                if(this.adjMatrix[i][j] == 0 && i != j)
+                    g2.addEdge(i, j, 1);
+            }
+        }
+        return g2;
     }
 }
