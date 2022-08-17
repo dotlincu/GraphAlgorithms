@@ -86,4 +86,26 @@ public class Graph {
         }
         return g2;
     }
+
+    public float density(){
+        // d = |E|/(|V|*|V|-1)
+        // |E| = countEdges   |V| = countNodes
+        float result = (this.countEdges) / ((this.countNodes * this.countNodes) - 1);
+        return result;
+    }
+
+    public boolean subGraph(Graph g2){
+        // retorna true se g2 é subgrafo de thiss / false caso contrario
+        if(this.countNodes < g2.countNodes)
+            return false;
+        else {
+            for (int i = 0; i < g2.adjMatrix.length; i++) {
+                for (int j = 0; j < g2.adjMatrix[i].length; j++) {
+                    if(g2.adjMatrix[i][j] == 1 && this.adjMatrix[i][j] !=  1)
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
 }

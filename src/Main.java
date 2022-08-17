@@ -17,5 +17,7 @@ public class Main {
         System.out.println("Lowest Degree: " + g1.lowestDegree());
         System.out.println();
         System.out.println(g1.complement());
+        System.out.println(g1.density());
+        System.out.println(g1.subGraph(g1.complement()));
     }
 }
