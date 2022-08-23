@@ -1,4 +1,7 @@
-import java.lang.reflect.Array;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Graph {
@@ -21,6 +24,29 @@ public class Graph {
     public Graph(int countNodes){
         this.countNodes = countNodes;
         this.adjMatrix = new int[countNodes][countNodes];
+    }
+
+    public Graph(String fileName) throws IOException {
+        File file = new File(fileName);
+        FileReader reader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(reader);
+
+        // Read header
+        String[] line = bufferedReader.readLine().split(" ");
+        this.countNodes = (Integer.parseInt(line[0]));
+        int fileLines = (Integer.parseInt(line[1]));
+
+        // Create and fill adjMatrix with read edges
+        this.adjMatrix = new int[this.countNodes][this.countNodes];
+        for (int i = 0; i < fileLines; ++i) {
+            String[] edgeInfo = bufferedReader.readLine().split(" ");
+            int source = Integer.parseInt(edgeInfo[0]);
+            int sink = Integer.parseInt(edgeInfo[1]);
+            int weight = Integer.parseInt(edgeInfo[2]);
+            addEdge(source, sink, weight);
+        }
+        bufferedReader.close();
+        reader.close();
     }
 
     @Override
@@ -146,5 +172,9 @@ public class Graph {
             }
         }
         return R;
+    }
+
+    public boolean connected(){
+        return this.bfs(0).size() == this.countNodes;
     }
 }
