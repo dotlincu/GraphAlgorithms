@@ -1,3 +1,6 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Graph {
     private int countNodes;
     private int countEdges;
@@ -42,6 +45,19 @@ public class Graph {
         }
         this.adjMatrix[source][sink] = weight;
         this.countEdges++;
+    }
+
+    public void addEdgeUnoriented(int u, int v, int w){
+        if(u < 0 || u > (this.countNodes - 1)
+                || v < 0 || v > (this.countNodes -1)
+                || w <= 0){
+            System.err.println("Invalid edge: " + u + " "
+                    + v + " " + w);
+            return;
+        }
+        this.adjMatrix[u][v] = w;
+        this.adjMatrix[v][u] = w;
+        this.countEdges += 2;
     }
 
     public int degree(int node){
@@ -107,5 +123,28 @@ public class Graph {
             }
         }
         return true;
+    }
+
+    public ArrayList<Integer> bfs(int s){ // breadth-first search
+        int[] desc = new int[this.countNodes];
+        ArrayList<Integer> Q = new ArrayList<>();
+        ArrayList<Integer> R = new ArrayList<>();
+        Q.add(s);
+        R.add(s);
+        desc[s] = 1;
+
+        while (Q.size() > 0){
+            int u = Q.remove(0);
+            for (int v = 0; v < this.adjMatrix[u].length; v++) {
+                if(this.adjMatrix[u][v] != 0){
+                    if(desc[v] == 0) {
+                        Q.add(v);
+                        R.add(v);
+                        desc[v] = 1;
+                    }
+                }
+            }
+        }
+        return R;
     }
 }
