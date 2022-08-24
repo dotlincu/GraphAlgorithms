@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Graph {
     private int countNodes;
@@ -151,7 +152,7 @@ public class Graph {
         return true;
     }
 
-    public ArrayList<Integer> bfs(int s){ // breadth-first search
+    public ArrayList<Integer> bfs(int s){   // breadth-first search
         int[] desc = new int[this.countNodes];
         ArrayList<Integer> Q = new ArrayList<>();
         ArrayList<Integer> R = new ArrayList<>();
@@ -162,14 +163,38 @@ public class Graph {
         while (Q.size() > 0){
             int u = Q.remove(0);
             for (int v = 0; v < this.adjMatrix[u].length; v++) {
-                if(this.adjMatrix[u][v] != 0){
-                    if(desc[v] == 0) {
-                        Q.add(v);
-                        R.add(v);
-                        desc[v] = 1;
-                    }
+                if(this.adjMatrix[u][v] != 0 && desc[v] == 0){
+                    Q.add(v);
+                    R.add(v);
+                    desc[v] = 1;
                 }
             }
+        }
+        return R;
+    }
+
+    public ArrayList<Integer> dfs(int s){   //depth-first search
+        int[] desc = new int[this.countNodes];
+        Stack<Integer> S = new Stack<>();
+        ArrayList<Integer> R = new ArrayList<>();
+        S.addElement(s);
+        R.add(s);
+        desc[s] = 1;
+
+        while(S.size() > 0){
+            int u = S.lastElement();
+            boolean unstack = true;          //desempilhar
+            for (int v = 0; v < this.adjMatrix[u].length; v++) {
+                if (this.adjMatrix[u][v] != 0 && desc[v] == 0) {
+                    S.addElement(v);
+                    R.add(v);
+                    desc[v] = 1;
+                    unstack = false;
+                    break;
+                }
+            }
+            if(unstack)
+                S.removeElement(u);
         }
         return R;
     }

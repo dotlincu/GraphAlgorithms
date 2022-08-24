@@ -1,5 +1,7 @@
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 //        var g1 = new Graph(4);
 //        g1.addEdge(0,1,3);
 //        g1.addEdge(1,0,3);
@@ -20,16 +22,29 @@ public class Main {
 //        System.out.println(g1.density());
 //        System.out.println(g1.subGraph(g1.complement()));
 
-        var g1 = new Graph(9);
-        g1.addEdgeUnoriented(7, 5, 1);
-        g1.addEdgeUnoriented(7, 1, 1);
-        g1.addEdgeUnoriented(7, 2, 1);
-        g1.addEdgeUnoriented(1, 0, 1);
-        g1.addEdgeUnoriented(1, 4, 1);
-        g1.addEdgeUnoriented(2, 3, 1);
-        g1.addEdgeUnoriented(5, 6, 1);
-        g1.addEdgeUnoriented(6, 8, 1);
-        System.out.println(g1.bfs(7));
-        System.out.println(g1.connected());
+//        var g1 = new Graph(9);
+//        g1.addEdgeUnoriented(7, 5, 1);
+//        g1.addEdgeUnoriented(7, 1, 1);
+//        g1.addEdgeUnoriented(7, 2, 1);
+//        g1.addEdgeUnoriented(1, 0, 1);
+//        g1.addEdgeUnoriented(1, 4, 1);
+//        g1.addEdgeUnoriented(2, 3, 1);
+//        g1.addEdgeUnoriented(5, 6, 1);
+//        g1.addEdgeUnoriented(6, 8, 1);
+//        System.out.println(g1.bfs(7));
+//        System.out.println(g1.connected());
+
+//        System.out.println("\n");
+//        var g2 = new Graph("GraphAlgorithms/graph1.txt");
+//        System.out.println(g2);
+        var g3 = new Graph(7);
+        g3.addEdgeUnoriented(6,3,1);
+        g3.addEdgeUnoriented(3,2,1);
+        g3.addEdgeUnoriented(6,4,1);
+        g3.addEdgeUnoriented(4,0,1);
+        g3.addEdgeUnoriented(0,1,1);
+        g3.addEdgeUnoriented(6,5,1);
+        System.out.println(g3.dfs(6));
+
     }
 }
