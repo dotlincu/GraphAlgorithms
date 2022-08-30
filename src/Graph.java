@@ -202,7 +202,6 @@ public class Graph {
     public ArrayList<Integer> dfs_rec(int s){
         int[] desc = new int[this.countNodes];
         ArrayList<Integer> R = new ArrayList<>();
-        desc[s] = 1;
         dfs_rec_aux(s, desc, R);
         return R;
     }
