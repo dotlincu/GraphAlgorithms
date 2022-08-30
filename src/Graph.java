@@ -175,7 +175,7 @@ public class Graph {
 
     public ArrayList<Integer> dfs(int s){   //depth-first search
         int[] desc = new int[this.countNodes];
-        Stack<Integer> S = new Stack<>();
+        Stack<Integer> S = new Stack<>();   //pilha
         ArrayList<Integer> R = new ArrayList<>();
         S.addElement(s);
         R.add(s);
@@ -197,6 +197,32 @@ public class Graph {
                 S.removeElement(u);
         }
         return R;
+    }
+
+    public ArrayList<Integer> dfs_rec(int s){
+        int[] desc = new int[this.countNodes];
+        ArrayList<Integer> R = new ArrayList<>();
+        desc[s] = 1;
+        dfs_rec_aux(s, desc, R);
+        return R;
+    }
+
+    private void dfs_rec_aux(int u, int[] desc, ArrayList<Integer> R){
+        desc[u] = 1;
+        R.add(u);
+        for (int v = 0; v < this.adjMatrix[u].length; v++) {
+            if (this.adjMatrix[u][v] != 0 && desc[v] == 0) {
+                dfs_rec_aux(v, desc, R);
+            }
+        }
+    }
+
+    public boolean nonOriented(){
+        for (int i = 0; i < this.adjMatrix.length; i++)
+            for (int j = i + 1; j < this.adjMatrix[i].length; j++)
+                if(this.adjMatrix[i][j] != this.adjMatrix[j][i])
+                    return false;
+        return true;
     }
 
     public boolean connected(){

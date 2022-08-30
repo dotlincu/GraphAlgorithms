@@ -2,12 +2,12 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        var g1 = new Graph(4);
-//        g1.addEdge(0,1,3);
-//        g1.addEdge(1,0,3);
-//        g1.addEdge(0,3,4);
-//        g1.addEdge(3,0,4);
-//        g1.addEdge(3,4,2);
+        var g1 = new Graph(4);
+        g1.addEdge(0,1,3);
+        g1.addEdge(1,0,3);
+        g1.addEdge(0,3,4);
+        g1.addEdge(3,0,4);
+        g1.addEdge(3,2,2);
 //        System.out.println(g1);
 //
 //        System.out.println("Degree (0) = " + g1.degree(0));
@@ -37,14 +37,16 @@ public class Main {
 //        System.out.println("\n");
 //        var g2 = new Graph("GraphAlgorithms/graph1.txt");
 //        System.out.println(g2);
-        var g3 = new Graph(7);
-        g3.addEdgeUnoriented(6,3,1);
-        g3.addEdgeUnoriented(3,2,1);
-        g3.addEdgeUnoriented(6,4,1);
-        g3.addEdgeUnoriented(4,0,1);
+        var g3 = new Graph(8);
+        g3.addEdgeUnoriented(5,0,1);
         g3.addEdgeUnoriented(0,1,1);
-        g3.addEdgeUnoriented(6,5,1);
-        System.out.println(g3.dfs(6));
+        g3.addEdgeUnoriented(0,4,1);
+        g3.addEdgeUnoriented(5,3,1);
+        g3.addEdgeUnoriented(3,2,1);
+        g3.addEdgeUnoriented(3,6,1);
+        g3.addEdgeUnoriented(1,7,1);
 
+        System.out.println(g3.dfs_rec(5));
+//        System.out.println(g1.nonOriented());
     }
 }
