@@ -227,4 +227,33 @@ public class Graph {
     public boolean connected(){
         return this.bfs(0).size() == this.countNodes;
     }
+
+    public void floyd_warshall() {
+        int[][] dist = new int[this.countNodes][this.countNodes];
+        int[][] pred = new int[this.countNodes][this.countNodes];
+        for (int i = 0; i < this.adjMatrix.length; i++) {
+            for (int j = 0; j < this.adjMatrix[i].length; j++) {
+                if (i == j)
+                    dist[i][j] = 0;
+                else if (this.adjMatrix[i][j] != 0){
+                    dist[i][j] = this.adjMatrix[i][j];
+                    pred[i][j] = i;
+                } else {
+                    dist[i][j] = Integer.MAX_VALUE;
+                    pred[i][j] = Integer.parseInt(null);
+                }
+            }
+        }
+        for (int k = 0; k < this.countNodes - 1; k++) {
+            for (int i = 0; i < this.countNodes - 1; i++) {
+                for (int j = 0; j < this.countNodes - 1; j++) {
+                    if (dist[i][j] > (dist[i][k] + dist[k][j])){
+                        dist[i][j] = (dist[i][k] + dist[k][j]);
+                        pred[i][j] = pred[k][j];
+                    }
+                }
+            }
+        }
+        System.out.println(pred);
+    }
 }

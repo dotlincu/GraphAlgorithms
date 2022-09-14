@@ -3,12 +3,13 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         var g1 = new Graph(4);
-        g1.addEdge(0,1,3);
-        g1.addEdge(1,0,3);
-        g1.addEdge(0,3,4);
-        g1.addEdge(3,0,4);
+        g1.addEdge(2,1,3);
+        g1.addEdge(1,2,4);
+        g1.addEdge(0,1,1);
+        g1.addEdge(0,2,6);
         g1.addEdge(3,2,2);
-//        System.out.println(g1);
+        System.out.println(g1);
+
 //
 //        System.out.println("Degree (0) = " + g1.degree(0));
 //        System.out.println("Degree (1) = " + g1.degree(1));
