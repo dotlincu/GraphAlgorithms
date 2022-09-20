@@ -10,6 +10,8 @@ public class Graph {
     private int countEdges;
     private int[][] adjMatrix;
 
+    private static int INF = 999;
+
     public int getCountNodes() {
         return countNodes;
     }
@@ -228,25 +230,28 @@ public class Graph {
         return this.bfs(0).size() == this.countNodes;
     }
 
-    public void floyd_warshall() {
+    public void floyd_warshall(int s, int t) {
         int[][] dist = new int[this.countNodes][this.countNodes];
         int[][] pred = new int[this.countNodes][this.countNodes];
-        for (int i = 0; i < this.adjMatrix.length; i++) {
-            for (int j = 0; j < this.adjMatrix[i].length; j++) {
-                if (i == j)
+
+        for (int i = 0; i < this.adjMatrix.length; ++i) {
+            for (int j = 0; j < this.adjMatrix[i].length; ++j) {
+                if (i == j) {
                     dist[i][j] = 0;
-                else if (this.adjMatrix[i][j] != 0){
+                    pred[i][j] = -1;
+                } else if (this.adjMatrix[i][j] != 0){
                     dist[i][j] = this.adjMatrix[i][j];
                     pred[i][j] = i;
                 } else {
-                    dist[i][j] = Integer.MAX_VALUE;
-                    pred[i][j] = Integer.parseInt(null);
+                    dist[i][j] = INF;
+                    pred[i][j] = -1;
                 }
             }
         }
-        for (int k = 0; k < this.countNodes - 1; k++) {
-            for (int i = 0; i < this.countNodes - 1; i++) {
-                for (int j = 0; j < this.countNodes - 1; j++) {
+
+        for (int k = 0; k < this.countNodes - 1; ++k) {
+            for (int i = 0; i < this.countNodes - 1; ++i) {
+                for (int j = 0; j < this.countNodes - 1; ++j) {
                     if (dist[i][j] > (dist[i][k] + dist[k][j])){
                         dist[i][j] = (dist[i][k] + dist[k][j]);
                         pred[i][j] = pred[k][j];
@@ -254,6 +259,30 @@ public class Graph {
                 }
             }
         }
-        System.out.println(pred);
+
+        System.out.printf("Distancia de %d a %d é: %d", s, t, pred[s][t]);
+        ArrayList<Integer> C = new ArrayList<Integer>();
+        C.add(t);
+        int aux = t;
+        while(aux != s){
+//            aux = pred[aux][];
+            C.add(0,aux);
+        }
+        System.out.println(C);
+//        System.out.println("\n-- DIST");
+//        for (int i = 0; i < dist.length; i++) {
+//            for (int j = 0; j < dist[i].length; j++) {
+//                System.out.print(dist[i][j] + "\t\t");
+//            }
+//            System.out.println();
+//        }
+//
+//        System.out.println("\n -- PRED");
+//        for (int i = 0; i < pred.length; i++) {
+//            for (int j = 0; j < pred[i].length; j++) {
+//                System.out.print(pred[i][j] + "\t\t");
+//            }
+//            System.out.println();
+//        }
     }
 }
