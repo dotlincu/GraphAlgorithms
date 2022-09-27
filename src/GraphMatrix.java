@@ -231,6 +231,25 @@ public class GraphMatrix {
         return this.bfs(0).size() == this.countNodes;
     }
 
+    public ArrayList<Integer> topSort() {
+        int[] desc = new int[this.countNodes];
+        ArrayList<Integer> R = new ArrayList<>();
+        for (int v = 0; v < this.adjMatrix.length; ++v) {
+            if (desc[v] == 0)
+                topSortAux(v, desc, R);
+        }
+        return R;
+    }
+
+    public void topSortAux(int u, int[] desc, ArrayList<Integer> R) {
+        desc[u] = 1;
+        for (int v = 0; v < this.adjMatrix[u].length; ++v) {
+            if (this.adjMatrix[u][v] != 0 && desc[v] == 0)
+                topSortAux(v, desc, R);
+        }
+        R.add(0, u);
+    }
+
     public void floyd_warshall(int s, int t) {
         int[][] dist = new int[this.countNodes][this.countNodes];
         int[][] pred = new int[this.countNodes][this.countNodes];
