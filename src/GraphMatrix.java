@@ -10,7 +10,7 @@ public class GraphMatrix {
     private int countEdges;
     private int[][] adjMatrix;
 
-    private static int INF = 999;
+    private static final int INF = 999;
 
     public int getCountNodes() {
         return countNodes;
@@ -269,9 +269,9 @@ public class GraphMatrix {
             }
         }
 
-        for (int k = 0; k < this.countNodes - 1; ++k) {
-            for (int i = 0; i < this.countNodes - 1; ++i) {
-                for (int j = 0; j < this.countNodes - 1; ++j) {
+        for (int k = 0; k < this.countNodes; ++k) {
+            for (int i = 0; i < this.countNodes; ++i) {
+                for (int j = 0; j < this.countNodes; ++j) {
                     if (dist[i][j] > (dist[i][k] + dist[k][j])){
                         dist[i][j] = (dist[i][k] + dist[k][j]);
                         pred[i][j] = pred[k][j];
@@ -279,30 +279,30 @@ public class GraphMatrix {
                 }
             }
         }
-
-        System.out.printf("Distancia de %d a %d é: %d", s, t, pred[s][t]);
+        // Recoveing paths
+        System.out.printf("Distancia de %d a %d é: %d\n", s, t, dist[s][t]);
         ArrayList<Integer> C = new ArrayList<Integer>();
         C.add(t);
         int aux = t;
         while(aux != s){
-//            aux = pred[aux][];
-            C.add(0,aux);
+            aux = pred[s][aux];
+            C.add(0, aux);
         }
-        System.out.println(C);
-        System.out.println("\n-- DIST");
-        for (int i = 0; i < dist.length; i++) {
-            for (int j = 0; j < dist[i].length; j++) {
-                System.out.print(dist[i][j] + "\t\t");
-            }
-            System.out.println();
-        }
-
-        System.out.println("\n -- PRED");
-        for (int i = 0; i < pred.length; i++) {
-            for (int j = 0; j < pred[i].length; j++) {
-                System.out.print(pred[i][j] + "\t\t");
-            }
-            System.out.println();
-        }
+        System.out.println("Path: " + C);
+//        System.out.println("\n-- DIST");
+//        for (int i = 0; i < dist.length; i++) {
+//            for (int j = 0; j < dist[i].length; j++) {
+//                System.out.print(dist[i][j] + "\t\t");
+//            }
+//            System.out.println();
+//        }
+//
+//        System.out.println("\n -- PRED");
+//        for (int i = 0; i < pred.length; i++) {
+//            for (int j = 0; j < pred[i].length; j++) {
+//                System.out.print(pred[i][j] + "\t\t");
+//            }
+//            System.out.println();
+//        }
     }
 }
