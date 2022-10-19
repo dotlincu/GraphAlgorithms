@@ -3,12 +3,36 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public class Graph {
+public class GraphList {
     private int countNodes;
     private int countEdges;
     private ArrayList<ArrayList<Edge>> adjList;
 
-    public Graph(int countNodes) {
+    public int getCountNodes() {
+        return countNodes;
+    }
+
+    public void setCountNodes(int countNodes) {
+        this.countNodes = countNodes;
+    }
+
+    public int getCountEdges() {
+        return countEdges;
+    }
+
+    public void setCountEdges(int countEdges) {
+        this.countEdges = countEdges;
+    }
+
+    public ArrayList<ArrayList<Edge>> getAdjList() {
+        return adjList;
+    }
+
+    public void setAdjList(ArrayList<ArrayList<Edge>> adjList) {
+        this.adjList = adjList;
+    }
+
+    public GraphList(int countNodes) {
         this.countNodes = countNodes;
         adjList = new ArrayList<>(this.countNodes);
         for (int i = 0; i < this.countNodes; ++i) {
@@ -16,17 +40,15 @@ public class Graph {
         }
     }
 
-    public Graph(String fileName) throws Exception {
+    public GraphList(String fileName) throws Exception {
         File file = new File(fileName);
         FileReader reader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(reader);
 
-        // Read header
         String[] line = bufferedReader.readLine().split(" ");
         this.countNodes = (Integer.parseInt(line[0]));
         int fileLines = (Integer.parseInt(line[1]));
 
-        // Create and fill adjList with read edges
         adjList = new ArrayList<>(this.countNodes);
         for (int i = 0; i < this.countNodes; ++i) {
             adjList.add(new ArrayList<Edge>());
@@ -54,7 +76,7 @@ public class Graph {
         this.countEdges++;
     }
 
-    public void addEdgeUnoriented(int source, int sink, int weight){
+    public void addUnorientedEdge(int source, int sink, int weight){
         addEdge(source, sink, weight);
         addEdge(sink, source, weight);
     }
@@ -85,40 +107,67 @@ public class Graph {
         return lowest;
     }
 
-    public Graph complement(){
-        var g2 = new Graph(this.countNodes);
-        for (int i = 0; i < this.adjList.size(); i++) {
-            for (int j = 0; j < this.highestDegree(); j++) {
-                if(this.adjList.get(i).get(j).getWeight() == 0
-                        && this.adjList.get(i).get(j).getSource() != this.adjList.get(i).get(j).getSink())
-                    g2.addEdge(this.adjList.get(i).get(j).getSource(), this.adjList.get(i).get(j).getSink(), 5);
+    public float density() {
+        return (float)(this.countEdges / (this.countNodes * (this.countNodes - 1)));
+    }
+
+    public GraphList complement(){
+        var g2 = new GraphList(this.countNodes);
+        for (int u = 0; u < this.adjList.size(); ++u) {
+            for (int v = 0; v < this.highestDegree(); ++v) {
+                boolean addEdgeUV = true;
+                for (int idx = 0; idx < this.adjList.get(u).size(); ++idx) {
+                    int v2 = this.adjList.get(u).get(idx).getSink();
+                    if(v2 == v) {
+                        addEdgeUV = false;
+                        break;
+                    }
+                }
+                if(addEdgeUV && u != v)
+                    g2.addEdge(u, v, 1);
             }
         }
         return g2;
     }
 
-    public int getCountNodes() {
-        return countNodes;
+    public boolean isOriented() {
+        for (int u = 0; u < this.adjList.size(); ++u) {
+            for (int idx = 0; idx < this.adjList.get(u).size(); ++idx) {
+                int v = this.adjList.get(u).get(idx).getSink();
+                boolean hasEdgeVU = false;
+                for (int idx2 = 0; idx2 < this.adjList.get(v).size(); ++idx2) {
+                    int u2 = this.adjList.get(v).get(idx2).getSink();
+                    if(u == u2) {
+                        hasEdgeVU = true;
+                        break;
+                    }
+                }
+                if(!hasEdgeVU)
+                    return true;
+            }
+        }
+        return false;
     }
 
-    public void setCountNodes(int countNodes) {
-        this.countNodes = countNodes;
-    }
-
-    public int getCountEdges() {
-        return countEdges;
-    }
-
-    public void setCountEdges(int countEdges) {
-        this.countEdges = countEdges;
-    }
-
-    public ArrayList<ArrayList<Edge>> getAdjList() {
-        return adjList;
-    }
-
-    public void setAdjList(ArrayList<ArrayList<Edge>> adjList) {
-        this.adjList = adjList;
+    public boolean subgraph(GraphList g2) {
+        if(g2.countNodes > this.countNodes || g2.countEdges > this.countEdges)
+            return false;
+        for (int u = 0; u < g2.adjList.size(); ++u) {
+            boolean foundEdge = false;
+            for (int idx = 0; idx < g2.adjList.get(u).size(); ++idx) {
+                int v = g2.adjList.get(u).get(idx).getSink();
+                for (int idx2 = 0; idx2 < this.adjList.get(u).size(); ++idx2) {
+                    int v2 = this.adjList.get(u).get(idx2).getSink();
+                    if(v == v2) {
+                        foundEdge = true;
+                        break;
+                    }
+                }
+                if(!foundEdge)
+                    return false;
+            }
+        }
+        return true;
     }
 
     @Override

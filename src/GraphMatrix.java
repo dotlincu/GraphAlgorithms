@@ -34,12 +34,10 @@ public class GraphMatrix {
         FileReader reader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(reader);
 
-        // Read header
         String[] line = bufferedReader.readLine().split(" ");
         this.countNodes = (Integer.parseInt(line[0]));
         int fileLines = (Integer.parseInt(line[1]));
 
-        // Create and fill adjMatrix with read edges
         this.adjMatrix = new int[this.countNodes][this.countNodes];
         for (int i = 0; i < fileLines; ++i) {
             String[] edgeInfo = bufferedReader.readLine().split(" ");
@@ -76,7 +74,7 @@ public class GraphMatrix {
         this.countEdges++;
     }
 
-    public void addEdgeUnoriented(int u, int v, int w){
+    public void addUnorientedEdge(int u, int v, int w){
         if(u < 0 || u > (this.countNodes - 1)
                 || v < 0 || v > (this.countNodes -1)
                 || w <= 0){
@@ -90,7 +88,6 @@ public class GraphMatrix {
     }
 
     public int degree(int node){
-        // TODO usar lista de adjacencias invez de matriz
         if(node < 0 || node > (this.countNodes - 1) )
             System.err.println("Invalid node: " + node);
         int count = 0;
@@ -133,11 +130,8 @@ public class GraphMatrix {
         return g2;
     }
 
-    public float density(){
-        // d = |E|/(|V|*|V|-1)
-        // |E| = countEdges   |V| = countNodes
-        float result = (this.countEdges) / ((this.countNodes * this.countNodes) - 1);
-        return result;
+    public float density() {
+        return (float)(this.countEdges / (this.countNodes * ( this.countNodes - 1)));
     }
 
     public boolean subGraph(GraphMatrix g2){
@@ -202,32 +196,32 @@ public class GraphMatrix {
         return R;
     }
 
-    public ArrayList<Integer> dfs_rec(int s){
+    public ArrayList<Integer> dfsRec(int s){
         int[] desc = new int[this.countNodes];
         ArrayList<Integer> R = new ArrayList<>();
-        dfs_rec_aux(s, desc, R);
+        dfsRecAux(s, desc, R);
         return R;
     }
 
-    private void dfs_rec_aux(int u, int[] desc, ArrayList<Integer> R){
+    private void dfsRecAux(int u, int[] desc, ArrayList<Integer> R){
         desc[u] = 1;
         R.add(u);
         for (int v = 0; v < this.adjMatrix[u].length; v++) {
             if (this.adjMatrix[u][v] != 0 && desc[v] == 0) {
-                dfs_rec_aux(v, desc, R);
+                dfsRecAux(v, desc, R);
             }
         }
     }
 
-    public boolean nonOriented(){
+    public boolean isOriented(){
         for (int i = 0; i < this.adjMatrix.length; i++)
             for (int j = i + 1; j < this.adjMatrix[i].length; j++)
                 if(this.adjMatrix[i][j] != this.adjMatrix[j][i])
-                    return false;
-        return true;
+                    return true;
+        return false;
     }
 
-    public boolean connected(){
+    public boolean isConnected(){
         return this.bfs(0).size() == this.countNodes;
     }
 
@@ -250,7 +244,7 @@ public class GraphMatrix {
         R.add(0, u);
     }
 
-    public void floyd_warshall(int s, int t) {
+    public ArrayList<Integer> floydWarshall(int s, int t) {
         int[][] dist = new int[this.countNodes][this.countNodes];
         int[][] pred = new int[this.countNodes][this.countNodes];
 
@@ -279,8 +273,7 @@ public class GraphMatrix {
                 }
             }
         }
-        // Recoveing paths
-        System.out.printf("Distancia de %d a %d é: %d\n", s, t, dist[s][t]);
+        System.out.printf("Distancia de %d até %d é: %d\n", s, t, dist[s][t]);
         ArrayList<Integer> C = new ArrayList<Integer>();
         C.add(t);
         int aux = t;
@@ -288,21 +281,13 @@ public class GraphMatrix {
             aux = pred[s][aux];
             C.add(0, aux);
         }
-        System.out.println("Path: " + C);
-//        System.out.println("\n-- DIST");
-//        for (int i = 0; i < dist.length; i++) {
-//            for (int j = 0; j < dist[i].length; j++) {
-//                System.out.print(dist[i][j] + "\t\t");
-//            }
-//            System.out.println();
-//        }
-//
-//        System.out.println("\n -- PRED");
-//        for (int i = 0; i < pred.length; i++) {
-//            for (int j = 0; j < pred[i].length; j++) {
-//                System.out.print(pred[i][j] + "\t\t");
-//            }
-//            System.out.println();
-//        }
+//        System.out.println("Path: " + C);
+        return C;
     }
+
+//    public ArrayList<Integer> nearesNeighbor() {
+//
+//
+//    }
 }
+

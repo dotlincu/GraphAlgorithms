@@ -2,7 +2,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        var g1 = new GraphMatrix("graph4.txt");
+        var g1 = new GraphMatrix("graph1.txt");
 //        g1.addEdge(0,1,10);
 //        g1.addEdge(0,2,20);
 //        g1.addEdge(2,0,15);
@@ -10,10 +10,13 @@ public class Main {
 //        g1.addEdge(3,2,2);
         System.out.println(g1);
 
-        System.out.println(g1.complement());
+//        System.out.println(g1.complement());
 
-        g1.floyd_warshall(0, 3);
-//
+//        g1.floydWarshall(0, 3);
+        System.out.println();
+//        System.out.println(g1.topSort());
+        System.out.println(g1.density());
+
 //        System.out.println("Degree (0) = " + g1.degree(0));
 //        System.out.println("Degree (1) = " + g1.degree(1));
 //        System.out.println("Degree (2) = " + g1.degree(2));
