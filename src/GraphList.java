@@ -8,6 +8,8 @@ public class GraphList {
     private int countEdges;
     private ArrayList<ArrayList<Edge>> adjList;
 
+    private static final int INF = 999;
+
     public int getCountNodes() {
         return countNodes;
     }
@@ -168,6 +170,145 @@ public class GraphList {
             }
         }
         return true;
+    }
+
+    public ArrayList<Integer> bfs(int s) {
+        int[] desc = new int[this.countNodes];
+        ArrayList<Integer> Q = new ArrayList<>();
+        ArrayList<Integer> R = new ArrayList<>();
+        Q.add(s);
+        R.add(s);
+        desc[s] = 1;
+
+        while (Q.size() > 0) {
+            int u = Q.remove(0);
+            for (int v = 0; v < this.adjList.get(u).size(); v++) {
+                if (desc[this.adjList.get(u).get(v).getSink()] == 0) {
+                    Q.add(this.adjList.get(u).get(v).getSink());
+                    R.add(this.adjList.get(u).get(v).getSink());
+                    desc[this.adjList.get(u).get(v).getSink()] = 1;
+                }
+            }
+        }
+        return R;
+    }
+
+    public ArrayList<Integer> dfs(int s) {
+        int[] desc = new int[this.countNodes];
+        ArrayList<Integer> S = new ArrayList<>();
+        ArrayList<Integer> R = new ArrayList<>();
+        S.add(s);
+        R.add(s);
+        desc[s] = 1;
+
+        while (S.size() > 0) {
+            boolean unstack = true;
+            int u = S.get(S.size() - 1);
+            for (int v = 0; v < this.adjList.get(u).size(); v++) {
+                if (desc[this.adjList.get(u).get(v).getSink()] == 0) {
+                    S.add(this.adjList.get(u).get(v).getSink());
+                    R.add(this.adjList.get(u).get(v).getSink());
+                    desc[this.adjList.get(u).get(v).getSink()] = 1;
+                    unstack = false;
+                    break;
+                }
+            }
+            if (unstack)
+                S.remove(S.size() - 1);
+        }
+        return R;
+    }
+
+    public ArrayList<Integer> dfsRec(int s) {
+        int[] desc = new int[this.countNodes];
+        ArrayList<Integer> R = new ArrayList<>();
+        dfsRecAux(s, desc, R);
+        return R;
+    }
+
+    public void dfsRecAux(int u, int[] desc, ArrayList<Integer> R) {
+        desc[u] = 1;
+        R.add(u);
+        for (int idx = 0; idx < this.adjList.get(u).size(); ++idx) {
+            int v = this.adjList.get(u).get(idx).getSink();
+            if (desc[v] == 0) {
+                dfsRecAux(v, desc, R);
+            }
+        }
+    }
+
+    public boolean isConnected() {
+        return (this.bfs(0).size() == this.countNodes);
+    }
+
+//    public ArrayList<Edge> kruskal() {
+//        ArrayList<Edge> T = new ArrayList<Edge>(this.countNodes - 1);
+//        int[] F = new int[this.countNodes];
+//        // makeset(u)
+//        for (int u = 0; u < this.countNodes; ++u)
+//            F[u] = u;
+//        edgeList.sort(null);
+//        for (int idx = 0; idx < edgeList.size(); ++idx) {
+//            int u = edgeList.get(idx).getSource();
+//            int v = edgeList.get(idx).getSink();
+//            if (F[u] != F[v]) { // findset(u) != findset(v)
+//                T.add(edgeList.get(idx));
+//                // Save some iterations if tree is already built
+//                if (T.size() == countNodes - 1)
+//                    break;
+//                // union(u, v)
+//                int k = F[v];
+//                for (int i = 0; i < F.length; ++i) {
+//                    if (F[i] == k) {
+//                        F[i] = F[u];
+//                    }
+//                }
+//            }
+//        }
+//        return T;
+//    }
+
+    public ArrayList<Edge> prim() {
+        ArrayList<Edge> T = new ArrayList<Edge>(this.countNodes - 1);
+        int s = 0;
+        int[] dist = new int[this.countNodes];
+        int[] parent = new int[this.countNodes];
+        // Q represents the nodes that were not connected yet
+        ArrayList<Integer> Q = new ArrayList<Integer>(this.countNodes);
+        for (int u = 0; u < this.countNodes; ++u) {
+            dist[u] = INF;
+            parent[u] = -1;
+            Q.add(u);
+        }
+        dist[s] = 0;
+        while (Q.size() != 0) {
+            int u = -1;
+            int min = INF;
+            for (int idx = 0; idx < Q.size(); ++idx) {
+                int i = Q.get(idx);
+                if (dist[i] < min) {
+                    min = dist[i];
+                    u = i;
+                }
+            }
+            // Node u is gonna be connected
+            Q.remove((Integer) u);
+            for (int idx = 0; idx < this.adjList.get(u).size(); ++idx) {
+                int v = this.adjList.get(u).get(idx).getSink();
+                int w = this.adjList.get(u).get(idx).getWeight();
+                if (Q.contains(v) && w < dist[v]) {
+                    dist[v] = w;
+                    parent[v] = u;
+                }
+            }
+        }
+        // Recover the tree from parent array
+        for (int u = 0; u < parent.length; ++u) {
+            if (parent[u] != -1) {
+                T.add(new Edge(u, parent[u], 1));
+            }
+        }
+        return T;
     }
 
     @Override
