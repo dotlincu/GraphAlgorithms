@@ -1,61 +1,91 @@
+import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        var g1 = new GraphMatrix("graph1.txt");
-//        g1.addEdge(0,1,10);
-//        g1.addEdge(0,2,20);
-//        g1.addEdge(2,0,15);
-//        g1.addEdge(0,2,6);
-//        g1.addEdge(3,2,2);
-        System.out.println(g1);
-
-//        System.out.println(g1.complement());
-
-//        g1.floydWarshall(0, 3);
-        System.out.println();
-//        System.out.println(g1.topSort());
-        System.out.println(g1.density());
-
-//        System.out.println("Degree (0) = " + g1.degree(0));
-//        System.out.println("Degree (1) = " + g1.degree(1));
-//        System.out.println("Degree (2) = " + g1.degree(2));
-//        System.out.println("Degree (3) = " + g1.degree(3));
-//        System.out.println();
-//        System.out.println("Highest Degree: " + g1.highestDegree());
-//        System.out.println("Lowest Degree: " + g1.lowestDegree());
-//        System.out.println();
-//        System.out.println(g1.complement());
-//        System.out.println(g1.density());
-//        System.out.println(g1.subGraph(g1.complement()));
-
-//        var g1 = new Graph(9);
-//        g1.addEdgeUnoriented(7, 5, 1);
-//        g1.addEdgeUnoriented(7, 1, 1);
-//        g1.addEdgeUnoriented(7, 2, 1);
-//        g1.addEdgeUnoriented(1, 0, 1);
-//        g1.addEdgeUnoriented(1, 4, 1);
-//        g1.addEdgeUnoriented(2, 3, 1);
-//        g1.addEdgeUnoriented(5, 6, 1);
-//        g1.addEdgeUnoriented(6, 8, 1);
-//        System.out.println(g1.bfs(7));
-//        System.out.println(g1.connected());
-
-//        System.out.println("\n");
-//        var g2 = new Graph("GraphAlgorithms/graph1.txt");
-//        System.out.println(g2);
-//        var g3 = new Graph(8);
-//        g3.addEdgeUnoriented(5,0,1);
-//        g3.addEdgeUnoriented(0,1,1);
-//        g3.addEdgeUnoriented(0,4,1);
-//        g3.addEdgeUnoriented(5,3,1);
-//        g3.addEdgeUnoriented(3,2,1);
-//        g3.addEdgeUnoriented(3,6,1);
-//        g3.addEdgeUnoriented(1,7,1);
+//        var g1 = new GraphList("./cm/rg300_4730.txt");
+//        var g2 = new GraphMatrix("./cm/rg300_4730.txt");
+////        System.out.println(g1.getAdjList());
 //
-//        System.out.println(g3);
+//        long startTime = System.currentTimeMillis();
+//        System.out.println("Dijsktra: " + g1.dijkstra(49, 50));
+//        long finalTime = System.currentTimeMillis();
+//        System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
 //
-//        System.out.println(g3.dfs_rec(5));
-//        System.out.println(g1.nonOriented());
+//        startTime = System.currentTimeMillis();
+//        System.out.println("BellmanFord: " + g1.bellmanFord(49, 50));
+//        finalTime = System.currentTimeMillis();
+//
+//        System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
+//
+//        startTime = System.currentTimeMillis();
+//        System.out.println("BellmanFord Melhorado: " + g1.bellmanFordMelhorado(49, 50));
+//        finalTime = System.currentTimeMillis();
+//
+//        System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
+//
+//        startTime = System.currentTimeMillis();
+//        System.out.println("Floyd Warshall: " + g2.floydWarshall(49, 50));
+//        finalTime = System.currentTimeMillis();
+//
+//        System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
+
+
+        int x = 0, origin, destiny;
+        String name;
+        Scanner sc = new Scanner(System.in);
+        long startTime, finalTime;
+        File file;
+        GraphList graph;
+        try {
+            while (x != 3) {
+                System.out.println("\nInforme a tarefa: ");
+                System.out.println("\t1 - Caminho Mínimo\n\t2 - Labirinto\n\t3 - Sair");
+                x = Integer.parseInt(sc.nextLine());
+                switch (x) {
+                    case 1:
+                        name = "./cm/";
+                        System.out.print("Arquivo: ");
+                        name += sc.nextLine();
+                        System.out.print("Origem: ");
+                        origin = Integer.parseInt(sc.nextLine());
+                        System.out.print("Destino: ");
+                        destiny = Integer.parseInt(sc.nextLine());
+                        file = new File(name);
+                        if (file.isFile()) {
+                            graph = new GraphList(name);
+                            startTime = System.currentTimeMillis();
+                            System.out.println("Processando...");
+                            System.out.println("Caminho: " + graph.dijkstra(origin, destiny));
+                            finalTime = System.currentTimeMillis();
+                            System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
+                        } else
+                            System.out.println("\nArquivo não encontrado!");
+                        break;
+                    case 2:
+                        name = "./maze/";
+                        System.out.print("Arquivo: ");
+                        name += sc.nextLine();
+                        file = new File(name);
+                        if(file.isFile()) {
+                            startTime = System.currentTimeMillis();
+                            System.out.println("Processando...");
+                            GraphMatrix.mazeGenerator(name);
+                            finalTime = System.currentTimeMillis();
+                            System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
+                        } else
+                            System.out.println("\nArquivo não encontrado!");
+                        break;
+                    case 3:
+                        System.out.println("Saindo...");
+                        break;
+                    default:
+                        System.out.println("Comando Inválido!");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
     }
 }
