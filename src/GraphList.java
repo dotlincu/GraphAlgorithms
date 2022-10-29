@@ -513,14 +513,14 @@ public class GraphList {
                 }
             }
         }
-        startTime = System.currentTimeMillis();
-        System.out.println("Dijkstra: " + graph.dijkstra(S, E));
-        finalTime = System.currentTimeMillis();
-        System.out.printf("Time: %.3fs\n\n", ((finalTime - startTime) / 1000d));
 //        startTime = System.currentTimeMillis();
-//        System.out.println("BellmanFord Melhorado: " + graph.bellmanFordImproved(S, E));
+//        System.out.println("Dijkstra: " + graph.dijkstra(S, E));
 //        finalTime = System.currentTimeMillis();
 //        System.out.printf("Time: %.3fs\n\n", ((finalTime - startTime) / 1000d));
+        startTime = System.currentTimeMillis();
+        System.out.println("BellmanFord Melhorado: " + graph.bellmanFordImproved(S, E));
+        finalTime = System.currentTimeMillis();
+        System.out.printf("Time: %.3fs\n\n", ((finalTime - startTime) / 1000d));
         return graph;
     }
 }

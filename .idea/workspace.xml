@@ -3,10 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0ca8f5a5-e98c-46c2-803d-b1ddad3c7873" name="Changes" comment="small change">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GraphAlgorithms/GraphMatrix.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphAlgorithms/GraphMatrix.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/GraphAlgorithms/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GraphAlgorithms/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GraphList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GraphList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GraphMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GraphMatrix.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
