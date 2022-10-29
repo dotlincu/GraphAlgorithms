@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -44,22 +41,28 @@ public class GraphMatrix {
             int source = Integer.parseInt(edgeInfo[0]);
             int sink = Integer.parseInt(edgeInfo[1]);
             int weight = Integer.parseInt(edgeInfo[2]);
-            addEdge(source, sink, weight);
+            if(source < 0 || source == sink || weight == 0)
+                break;
+            else
+                addEdge(source, sink, weight);
         }
         bufferedReader.close();
         reader.close();
     }
 
-    @Override
-    public String toString() {
-        String str = "";
-        for (int i = 0; i < this.adjMatrix.length; i++) {
-            for (int j = 0; j < this.adjMatrix[i].length; j++) {
-                str += this.adjMatrix[i][j] + "\t";
-            }
-            str += "\n";
+    public float density() {
+        return (float)(this.countEdges / (this.countNodes * ( this.countNodes - 1)));
+    }
+
+    public int degree(int node){
+        if(node < 0 || node > (this.countNodes - 1) )
+            System.err.println("Invalid node: " + node);
+        int count = 0;
+        for (int i = 0; i < this.adjMatrix[node].length; i++) {
+            if(this.adjMatrix[node][i] != 0)
+                ++count;
         }
-        return str;
+        return count;
     }
 
     public void addEdge(int source, int sink, int weight){
@@ -87,17 +90,6 @@ public class GraphMatrix {
         this.countEdges += 2;
     }
 
-    public int degree(int node){
-        if(node < 0 || node > (this.countNodes - 1) )
-            System.err.println("Invalid node: " + node);
-        int count = 0;
-        for (int i = 0; i < this.adjMatrix[node].length; i++) {
-            if(this.adjMatrix[node][i] != 0)
-                ++count;
-        }
-        return count;
-    }
-
     public int highestDegree(){
         int highest = 0;
         for (int i = 0; i < this.adjMatrix.length; i++) {
@@ -116,37 +108,6 @@ public class GraphMatrix {
                 lowest = degreeNodeI;
         }
         return lowest;
-    }
-
-    public GraphMatrix complement(){
-        var g2 = new GraphMatrix(this.countNodes);
-
-        for (int i = 0; i < this.adjMatrix.length; i++) {
-            for (int j = 0; j < this.adjMatrix[i].length; j++) {
-                if(this.adjMatrix[i][j] == 0 && i != j)
-                    g2.addEdge(i, j, 1);
-            }
-        }
-        return g2;
-    }
-
-    public float density() {
-        return (float)(this.countEdges / (this.countNodes * ( this.countNodes - 1)));
-    }
-
-    public boolean subGraph(GraphMatrix g2){
-        // retorna true se g2 é subgrafo de thiss / false caso contrario
-        if(this.countNodes < g2.countNodes)
-            return false;
-        else {
-            for (int i = 0; i < g2.adjMatrix.length; i++) {
-                for (int j = 0; j < g2.adjMatrix[i].length; j++) {
-                    if(g2.adjMatrix[i][j] == 1 && this.adjMatrix[i][j] !=  1)
-                        return false;
-                }
-            }
-        }
-        return true;
     }
 
     public ArrayList<Integer> bfs(int s){   // breadth-first search
@@ -213,35 +174,54 @@ public class GraphMatrix {
         }
     }
 
+    public boolean isConnected(){
+        return this.bfs(0).size() == this.countNodes;
+    }
+
+    @Override
+    public String toString() {
+        String str = "";
+        for (int i = 0; i < this.adjMatrix.length; i++) {
+            for (int j = 0; j < this.adjMatrix[i].length; j++) {
+                str += this.adjMatrix[i][j] + "\t";
+            }
+            str += "\n";
+        }
+        return str;
+    }
+
+    public GraphMatrix complement(){
+        var g2 = new GraphMatrix(this.countNodes);
+
+        for (int i = 0; i < this.adjMatrix.length; i++) {
+            for (int j = 0; j < this.adjMatrix[i].length; j++) {
+                if(this.adjMatrix[i][j] == 0 && i != j)
+                    g2.addEdge(i, j, 1);
+            }
+        }
+        return g2;
+    }
+
+    public boolean subGraph(GraphMatrix g2){
+        if(this.countNodes < g2.countNodes)
+            return false;
+        else {
+            for (int i = 0; i < g2.adjMatrix.length; i++) {
+                for (int j = 0; j < g2.adjMatrix[i].length; j++) {
+                    if(g2.adjMatrix[i][j] == 1 && this.adjMatrix[i][j] !=  1)
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public boolean isOriented(){
         for (int i = 0; i < this.adjMatrix.length; i++)
             for (int j = i + 1; j < this.adjMatrix[i].length; j++)
                 if(this.adjMatrix[i][j] != this.adjMatrix[j][i])
                     return true;
         return false;
-    }
-
-    public boolean isConnected(){
-        return this.bfs(0).size() == this.countNodes;
-    }
-
-    public ArrayList<Integer> topSort() {
-        int[] desc = new int[this.countNodes];
-        ArrayList<Integer> R = new ArrayList<>();
-        for (int v = 0; v < this.adjMatrix.length; ++v) {
-            if (desc[v] == 0)
-                topSortAux(v, desc, R);
-        }
-        return R;
-    }
-
-    public void topSortAux(int u, int[] desc, ArrayList<Integer> R) {
-        desc[u] = 1;
-        for (int v = 0; v < this.adjMatrix[u].length; ++v) {
-            if (this.adjMatrix[u][v] != 0 && desc[v] == 0)
-                topSortAux(v, desc, R);
-        }
-        R.add(0, u);
     }
 
     public ArrayList<Integer> floydWarshall(int s, int t) {
@@ -273,21 +253,15 @@ public class GraphMatrix {
                 }
             }
         }
-        System.out.printf("Distancia de %d até %d é: %d\n", s, t, dist[s][t]);
-        ArrayList<Integer> C = new ArrayList<Integer>();
+        ArrayList<Integer> C = new ArrayList<>();
         C.add(t);
         int aux = t;
         while(aux != s){
             aux = pred[s][aux];
             C.add(0, aux);
         }
-//        System.out.println("Path: " + C);
+        System.out.println("Custo: " + dist[s][t]);
         return C;
     }
-
-//    public ArrayList<Integer> nearesNeighbor() {
-//
-//
-//    }
 }
 

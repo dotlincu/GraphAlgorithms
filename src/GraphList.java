@@ -268,9 +268,9 @@ public class GraphList {
         int u = 0;
 
         if(s < this.countNodes && s >= 0 && t < this.countNodes && t >= 0) {
-            for (int i = 0; i < this.countNodes; i++) {
+            for (int i = 0; i < this.countNodes; ++i) {
                 dist[i] = INF;
-                pred[i] = 0;
+                pred[i] = -1;
                 Q.add(i);
             }
             dist[s] = 0;
@@ -311,7 +311,6 @@ public class GraphList {
         int[] dist = new int[this.countNodes];
         int[] pred = new int[this.countEdges];
 
-
         if(s < this.countNodes && s >= 0 && t < this.countNodes && t >= 0) {
             for (int v = 0; v < this.countNodes; ++v) {
                 dist[v] = INF;
@@ -341,7 +340,7 @@ public class GraphList {
         return C;
     }
 
-    public ArrayList<Integer> bellmanFordMelhorado(int s, int t) {
+    public ArrayList<Integer> bellmanFordImproved(int s, int t) {
         ArrayList<Integer> C = new ArrayList<>();
         int[] dist = new int[this.countNodes];
         int[] pred = new int[this.countEdges];
@@ -514,11 +513,14 @@ public class GraphList {
                 }
             }
         }
+        startTime = System.currentTimeMillis();
         System.out.println("Dijkstra: " + graph.dijkstra(S, E));
-        System.out.println("BellmanFord: " + graph.bellmanFord(S, E));
-        System.out.println("BellmanFord Melhorado: " + graph.bellmanFordMelhorado(S, E));
         finalTime = System.currentTimeMillis();
         System.out.printf("Time: %.3fs\n\n", ((finalTime - startTime) / 1000d));
+//        startTime = System.currentTimeMillis();
+//        System.out.println("BellmanFord Melhorado: " + graph.bellmanFordImproved(S, E));
+//        finalTime = System.currentTimeMillis();
+//        System.out.printf("Time: %.3fs\n\n", ((finalTime - startTime) / 1000d));
         return graph;
     }
 }
