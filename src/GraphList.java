@@ -10,7 +10,7 @@ public class GraphList {
     private int countEdges;
     private ArrayList<ArrayList<Edge>> adjList;
     private ArrayList<Edge> edgeList;
-    private static final int INF = 999;
+    private static final int INF = 999999999;
 
     public int getCountNodes() {
         return countNodes;
@@ -56,7 +56,7 @@ public class GraphList {
 
         adjList = new ArrayList<>(this.countNodes);
         for (int i = 0; i < this.countNodes; ++i) {
-            adjList.add(new ArrayList<Edge>());
+            adjList.add(new ArrayList<>());
         }
         edgeList = new ArrayList<>();
         for (int i = 0; i < fileLines; ++i) {
@@ -64,7 +64,8 @@ public class GraphList {
             int source = Integer.parseInt(edgeInfo[0]);
             int sink = Integer.parseInt(edgeInfo[1]);
             int weight = Integer.parseInt(edgeInfo[2]);
-            addEdge(source, sink, weight);
+            if(!(source < 0 || source == sink || weight == 0))
+                addEdge(source, sink, weight);
         }
         bufferedReader.close();
         reader.close();
@@ -261,109 +262,120 @@ public class GraphList {
 
     public ArrayList<Integer> dijkstra(int s, int t){
         ArrayList<Integer> Q = new ArrayList<>(this.countNodes);
+        ArrayList<Integer> C = new ArrayList<>();
         int[] dist = new int[this.countNodes];
         int[] pred = new int[this.countEdges];
         int u = 0;
 
-        for (int i = 0; i < this.countNodes; i++) {
-            dist[i] = INF;
-            pred[i] = -1;
-            Q.add(i);
-        }
-        dist[s] = 0;
-        pred[s] = s;
-
-        while(Q.size() > 0) {
-            for (int i = 0; i < dist.length; i++) {
-                if(dist[i] < INF && Q.contains(i))
-                    u = i;
+        if(s < this.countNodes && s >= 0 && t < this.countNodes && t >= 0) {
+            for (int i = 0; i < this.countNodes; i++) {
+                dist[i] = INF;
+                pred[i] = 0;
+                Q.add(i);
             }
-            Q.remove(Q.indexOf(u));
+            dist[s] = 0;
+            pred[s] = s;
 
-            for (int v = 0; v < this.adjList.get(u).size(); ++v) {
-                if(this.adjList.get(u).get(v) != null){
-                    if(dist[this.getAdjList().get(u).get(v).getSink()] > (dist[u] + this.adjList.get(u).get(v).getWeight())) {
-                        dist[this.getAdjList().get(u).get(v).getSink()] = dist[u] + this.adjList.get(u).get(v).getWeight();
-                        pred[this.getAdjList().get(u).get(v).getSink()] = u;
+            while (Q.size() > 0) {
+                for (int i = 0; i < dist.length; i++) {
+                    if (dist[i] < INF && Q.contains(i)) {
+                        u = i;
+                    }
+                }
+                Q.remove(Q.indexOf(u));
+
+                for (int v = 0; v < this.adjList.get(u).size(); ++v) {
+                    if (this.adjList.get(u).get(v) != null && this.adjList.get(u).get(v).getWeight() != 0) {
+                        if (dist[this.getAdjList().get(u).get(v).getSink()] > (dist[u] + this.adjList.get(u).get(v).getWeight())) {
+                            dist[this.getAdjList().get(u).get(v).getSink()] = dist[u] + this.adjList.get(u).get(v).getWeight();
+                            pred[this.getAdjList().get(u).get(v).getSink()] = u;
+                        }
                     }
                 }
             }
+            C.add(t);
+            int aux = t;
+            while (aux != s) {
+                aux = pred[aux];
+                C.add(0, aux);
+            }
+            System.out.println("Custo: " + dist[t]);
+        } else {
+            System.out.println("Node not found!");
         }
-        ArrayList<Integer> C = new ArrayList<>();
-        C.add(t);
-        int aux = t;
-        while(aux != s){
-            aux = pred[aux];
-            C.add(0, aux);
-        }
-        System.out.println("Custo: " + dist[t]);
         return C;
     }
 
     public ArrayList<Integer> bellmanFord(int s, int t) {
+        ArrayList<Integer> C = new ArrayList<>();
         int[] dist = new int[this.countNodes];
         int[] pred = new int[this.countEdges];
 
-        for (int v = 0; v < this.countNodes; ++v) {
-            dist[v] = INF;
-            pred[v] = 0;
-        }
-        dist[s] = 0;
-        for (int i = 0; i < this.adjList.size(); ++i) {
-            for (int idx = 0; idx < edgeList.size(); ++idx) {
-                int u = edgeList.get(idx).getSource();
-                int v = edgeList.get(idx).getSink();
-                int w = edgeList.get(idx).getWeight();
-                if (dist[v] > dist[u] + w) {
-                    dist[v] = dist[u] + w;
-                    pred[v] = u;
+
+        if(s < this.countNodes && s >= 0 && t < this.countNodes && t >= 0) {
+            for (int v = 0; v < this.countNodes; ++v) {
+                dist[v] = INF;
+                pred[v] = 0;
+            }
+            dist[s] = 0;
+            for (int i = 0; i < this.adjList.size(); ++i) {
+                for (int idx = 0; idx < edgeList.size(); ++idx) {
+                    int u = edgeList.get(idx).getSource();
+                    int v = edgeList.get(idx).getSink();
+                    int w = edgeList.get(idx).getWeight();
+                    if (dist[v] > dist[u] + w) {
+                        dist[v] = dist[u] + w;
+                        pred[v] = u;
+                    }
                 }
             }
-        }
-
-        ArrayList<Integer> C = new ArrayList<>();
-        C.add(t);
-        int aux = t;
-        while (aux != s) {
-            aux = pred[aux];
-            C.add(0, aux);
-        }
-        System.out.println("Custo: " + dist[t]);
+            C.add(t);
+            int aux = t;
+            while (aux != s) {
+                aux = pred[aux];
+                C.add(0, aux);
+            }
+            System.out.println("Custo: " + dist[t]);
+        } else
+            System.out.println("\nNode not found!");
         return C;
     }
 
     public ArrayList<Integer> bellmanFordMelhorado(int s, int t) {
+        ArrayList<Integer> C = new ArrayList<>();
         int[] dist = new int[this.countNodes];
         int[] pred = new int[this.countEdges];
 
-        for (int v = 0; v < this.countNodes; ++v) {
-            dist[v] = INF;
-            pred[v] = 0;
-        }
-        dist[s] = 0;
-        for (int i = 0; i < this.adjList.size(); ++i) {
-            boolean swap = false;
-            for (int idx = 0; idx < edgeList.size(); ++idx) {
-                int u = edgeList.get(idx).getSource();
-                int v = edgeList.get(idx).getSink();
-                int w = edgeList.get(idx).getWeight();
-                if (dist[v] > dist[u] + w) {
-                    dist[v] = dist[u] + w;
-                    pred[v] = u;
-                    swap = true;
-                }
+        if(s < this.countNodes && s >= 0 && t < this.countNodes && t >= 0) {
+            for (int v = 0; v < this.countNodes; ++v) {
+                dist[v] = INF;
+                pred[v] = 0;
             }
-            if (swap == false)
-                break;
-        }
-        ArrayList<Integer> C = new ArrayList<>();
-        C.add(t);
-        int aux = t;
-        while (aux != s) {
-            aux = pred[aux];
-            C.add(0, aux);
-        }
-        System.out.println("Custo: " + dist[t]);
+            dist[s] = 0;
+            for (int i = 0; i < this.adjList.size(); ++i) {
+                boolean swap = false;
+                for (int idx = 0; idx < edgeList.size(); ++idx) {
+                    int u = edgeList.get(idx).getSource();
+                    int v = edgeList.get(idx).getSink();
+                    int w = edgeList.get(idx).getWeight();
+                    if (dist[v] > dist[u] + w) {
+                        dist[v] = dist[u] + w;
+                        pred[v] = u;
+                        swap = true;
+                    }
+                }
+                if (swap == false)
+                    break;
+            }
+            C.add(t);
+            int aux = t;
+            while (aux != s) {
+                aux = pred[aux];
+                C.add(0, aux);
+            }
+            System.out.println("Custo: " + dist[t]);
+        } else
+            System.out.println("\nNode not found!");
         return C;
     }
 
@@ -429,5 +441,84 @@ public class GraphList {
             }
         }
         return T;
+    }
+
+    public static GraphList converter(String fileName) throws IOException {
+        File file = new File(fileName);
+        FileReader reader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(reader);
+
+        String[] line;
+        String l;
+        int countC = 0, countL = 0, S = 0, E = 0;
+        long startTime = System.currentTimeMillis();
+        long finalTime;
+
+        while ((l = bufferedReader.readLine()) != null) {       // CONTA LINHAS E COLUNAS DO ARQUIVO
+            line = l.split("");
+            countC = line.length;
+            countL++;
+        }
+
+        String[][] arr = new String[countL][countC];
+        bufferedReader.close();
+        reader.close();
+
+        reader = new FileReader(file);
+        bufferedReader = new BufferedReader(reader);
+
+        int cont = 0;
+
+        while ((l = bufferedReader.readLine()) != null) {                                     // PASSA O CONTEUDO DAS LINHAS PRA MATRIZ
+            line = l.split("");
+            for (int i = 0; i < line.length; i++) {
+                arr[cont][i] = line[i];
+            }
+            cont++;
+        }
+
+        int countNodes = 0;
+        for (int i = 0; i < arr.length; i++) {                  // TRANSFORMA OS ESPAÇOS VAZIOS DA MATRIZ EM NUMEROS
+            for (int j = 0; j < arr[i].length; j++) {
+                if (arr[i][j] == null) {
+                    arr[i][j] = countNodes + "";
+                    countNodes++;
+                } else {
+                    if (!arr[i][j].equals("#") && !arr[i][j].equals("█")) {     // ACHA O INICIO E O FIM
+                        if (arr[i][j].equals("S")) {
+                            S = countNodes;
+                        }
+                        if (arr[i][j].equals("E")) {
+                            E = countNodes;
+                        }
+                        arr[i][j] = countNodes + "";
+                        countNodes++;
+                    }
+                }
+            }
+        }
+
+        GraphList graph = new GraphList(countNodes);
+
+        for (int i = 0; i < arr.length; i++) {                  // CRIA O GRAFO
+            for (int j = 0; j < arr[i].length; j++) {
+                if (j + 1 < arr[i].length) {
+                    if ((!arr[i][j].equals("#") && !arr[i][j].equals("█")) && (!arr[i][j + 1].equals("#") && !arr[i][j + 1].equals("█"))) {
+                        graph.addUnorientedEdge(Integer.parseInt(arr[i][j]), Integer.parseInt(arr[i][j + 1]), 1);
+                    }
+                }
+                if (i + 1 < arr.length) {
+                    if ((!arr[i][j].equals("#") && !arr[i][j].equals("█")) && (!arr[i + 1][j].equals("#") && !arr[i + 1][j].equals("█"))) {
+                        graph.addUnorientedEdge(Integer.parseInt(arr[i][j]), Integer.parseInt(arr[i + 1][j]), 1);
+                    }
+                }
+            }
+        }
+        System.out.println("Dijkstra: " + graph.dijkstra(S, E));
+        System.out.println("BellmanFord: " + graph.bellmanFord(S, E));
+        System.out.println("BellmanFord Melhorado: " + graph.bellmanFordMelhorado(S, E));
+        finalTime = System.currentTimeMillis();
+        System.out.printf("Time: %.3fs\n\n", ((finalTime - startTime) / 1000d));
+        return graph;
     }
 }
