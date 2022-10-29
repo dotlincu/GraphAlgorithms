@@ -4,33 +4,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-//        var g1 = new GraphList("./cm/rg300_4730.txt");
-//        var g2 = new GraphMatrix("./cm/rg300_4730.txt");
-////        System.out.println(g1.getAdjList());
-//
-//        long startTime = System.currentTimeMillis();
-//        System.out.println("Dijsktra: " + g1.dijkstra(49, 50));
-//        long finalTime = System.currentTimeMillis();
-//        System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
-//
-//        startTime = System.currentTimeMillis();
-//        System.out.println("BellmanFord: " + g1.bellmanFord(49, 50));
-//        finalTime = System.currentTimeMillis();
-//
-//        System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
-//
-//        startTime = System.currentTimeMillis();
-//        System.out.println("BellmanFord Melhorado: " + g1.bellmanFordMelhorado(49, 50));
-//        finalTime = System.currentTimeMillis();
-//
-//        System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
-//
-//        startTime = System.currentTimeMillis();
-//        System.out.println("Floyd Warshall: " + g2.floydWarshall(49, 50));
-//        finalTime = System.currentTimeMillis();
-//
-//        System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
-
 
         int x = 0, origin, destiny;
         String name;
@@ -57,7 +30,7 @@ public class Main {
                             graph = new GraphList(name);
                             startTime = System.currentTimeMillis();
                             System.out.println("Processando...");
-                            System.out.println("Caminho: " + graph.dijkstra(origin, destiny));
+                            System.out.println("Caminho: " + graph.bellmanFordImproved(origin, destiny));
                             finalTime = System.currentTimeMillis();
                             System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
                         } else
@@ -69,11 +42,8 @@ public class Main {
                         name += sc.nextLine();
                         file = new File(name);
                         if(file.isFile()) {
-                            startTime = System.currentTimeMillis();
                             System.out.println("Processando...");
-                            GraphMatrix.mazeGenerator(name);
-                            finalTime = System.currentTimeMillis();
-                            System.out.printf("Tempo: %.3fs\n", ((finalTime - startTime) / 1000d));
+                            GraphList.converter(name);
                         } else
                             System.out.println("\nArquivo não encontrado!");
                         break;
