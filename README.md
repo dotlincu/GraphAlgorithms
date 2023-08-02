@@ -1,5 +1,5 @@
 # Graph Algorithms Repository (Java)
-Activity in Java of the Algorithms and Data Structures III discipline - CSI 105 feat. <a href="https://github.com/">Caio Guilherme</a>. This repository contains various graph algorithms implemented in Java. These algorithms are commonly used in computer science and have applications in network analysis, path finding, and optimization problems. Below, you will find a brief description of each algorithm implemented in this repository.
+Activity in Java of the Algorithms and Data Structures III discipline - CSI 105 feat. <a href="https://github.com/caiogc">Caio Guilherme</a>. This repository contains various graph algorithms implemented in Java. These algorithms are commonly used in computer science and have applications in network analysis, path finding, and optimization problems. Below, you will find a brief description of each algorithm implemented in this repository.
 
 ### Some of the functions in this repository:
 - Breadth-first search
